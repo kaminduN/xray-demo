@@ -1,0 +1,19 @@
+{
+  "name": "request-lambda",
+  "version": "1.0.0",
+  "description": "node js lambda with xray tracing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodejs",
+    "xray"
+  ],
+  "author": "kamindu",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.73.0",
+    "aws-xray-sdk": "^1.1.1"
+  }
+}
