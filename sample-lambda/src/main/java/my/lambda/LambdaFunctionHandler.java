@@ -18,6 +18,9 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
 
+import com.amazonaws.xray.AWSXRay;
+import com.amazonaws.xray.entities.Subsegment;
+
 public class LambdaFunctionHandler implements
 		RequestHandler<Object, Object> {
 
@@ -52,11 +55,17 @@ public class LambdaFunctionHandler implements
 				.withTableName(TableNames.TEST_TABLE);
 
     try{
-    UpdateItemResult updateItemResult = dynamoDB
-				.updateItem(updateItemRequest);
-    context.getLogger().log("Result: " + updateItemResult);
+			Subsegment subsegment = AWSXRay.beginSubsegment("Save Name to DynamoDB");
+			subsegment.putAnnotation("table", TableNames.TEST_TABLE);
+			subsegment.putAnnotation("name", name);
 
-    return "{'status':'done'}";
+	    UpdateItemResult updateItemResult = dynamoDB
+					.updateItem(updateItemRequest);
+	    context.getLogger().log("Result: " + updateItemResult);
+
+			AWSXRay.endSubsegment();
+
+    	return "{'status':'done'}";
   }catch(ResourceNotFoundException ex){
         context.getLogger().log("Result: Failed"+ ex);
         throw ex;
